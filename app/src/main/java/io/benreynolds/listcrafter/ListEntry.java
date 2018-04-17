@@ -18,7 +18,7 @@ public class ListEntry implements Serializable {
     public static final int NAME_LENGTH_MAX_CHARACTERS = 256;
 
     /** Default name value for '{@code ListEntry}'s. */
-    private static final String NAME_DEFAULT = ListEntry.class.getSimpleName();
+    private static final String NAME_DEFAULT = "Unnamed List";
 
     /** Default completion state for '{@code ListEntry}'s. */
     private static final boolean COMPLETION_STATE_DEFAULT = false;
