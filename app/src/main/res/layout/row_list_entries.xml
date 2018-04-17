@@ -12,23 +12,24 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textAlignment="textStart"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintEnd_toStartOf="@+id/tvDateCreated"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Name"
-    />
+        tools:text="Name" />
 
     <TextView
         android:id="@+id/tvDateCreated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="01/01/1994"
-    />
+        tools:text="01/01/1994" />
 
 </android.support.constraint.ConstraintLayout>
