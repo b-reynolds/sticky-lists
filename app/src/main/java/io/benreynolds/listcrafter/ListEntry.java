@@ -11,17 +11,23 @@ import java.util.List;
  */
 public class ListEntry implements Serializable {
 
+    /** Minimum amount of characters required for a '{@code ListEntry}'s name */
+    public static final int NAME_LENGTH_MIN_CHARACTERS = 1;
+
+    /** Maximum amount of characters allowed for a '{@code ListEntry}'s name */
+    public static final int NAME_LENGTH_MAX_CHARACTERS = 256;
+
     /** Default name value for '{@code ListEntry}'s. */
-    private static final String DEFAULT_NAME = ListEntry.class.getSimpleName();
+    private static final String NAME_DEFAULT = ListEntry.class.getSimpleName();
 
     /** Default completion state for '{@code ListEntry}'s. */
-    private static final boolean DEFAULT_COMPLETION_STATE = false;
+    private static final boolean COMPLETION_STATE_DEFAULT = false;
 
     /** Name of the {@code ListEntry}. */
-    private String mName = DEFAULT_NAME;
+    private String mName = NAME_DEFAULT;
 
     /** Completion state of the {@code ListEntry}. */
-    private boolean mComplete = DEFAULT_COMPLETION_STATE;
+    private boolean mComplete = COMPLETION_STATE_DEFAULT;
 
     /** Date/time that the {@code ListEntry} was created. */
     private Date mDateCreated = Calendar.getInstance().getTime();
@@ -32,9 +38,14 @@ public class ListEntry implements Serializable {
     /**
      * Sets the name of the {@code ListEntry}.
      * @param name '{@code ListEntry}'s name.
+     * @return True if the name was successfully set, otherwise false (see {@code NAME_LENGTH_MIN_CHARACTERS} and {@code NAME_LENGTH_MAX_CHARACTERS}).
      */
-    public void setName(final String name) {
-        mName = name;
+    public boolean setName(final String name) {
+        if(name.length() >= NAME_LENGTH_MIN_CHARACTERS && name.length() <= NAME_LENGTH_MAX_CHARACTERS) {
+            mName = name;
+            return true;
+        }
+        return false;
     }
 
     /**
