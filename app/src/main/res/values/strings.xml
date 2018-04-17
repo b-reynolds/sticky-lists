@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">List Crafter</string>
     <string name="action_add_list">Add List</string>
+    <string name="dialog_title_list_name">List Name</string>
+    <string name="dialog_add_list_positive_button">ADD</string>
+    <string name="dialog_add_list_negative_button">@android:string/cancel</string>
 </resources>
