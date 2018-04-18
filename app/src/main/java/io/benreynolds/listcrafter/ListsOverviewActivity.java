@@ -2,6 +2,7 @@ package io.benreynolds.listcrafter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
@@ -21,7 +22,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * {@code ListsOverviewActivity} is the root activity of the application, it allows users to create and manage '{@code ListEntry}'s.
+ */
 public class ListsOverviewActivity extends AppCompatActivity {
+
+    public static final String EXTRA_SELECTED_LIST_INDEX = "SELECTED_LIST_INDEX";
 
     final ArrayList<ListEntry> mListEntries = new ArrayList<>();
     private ListEntryListAdapter mListEntryListAdapter;
@@ -37,25 +43,37 @@ public class ListsOverviewActivity extends AppCompatActivity {
         lvListEntries.setAdapter(mListEntryListAdapter);
         registerForContextMenu(lvListEntries);
 
+        lvListEntries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent startListViewActivity = new Intent(view.getContext(), ListViewActivity.class);
+                startListViewActivity.putExtra(EXTRA_SELECTED_LIST_INDEX, position);
+                startActivity(startListViewActivity);
+            }
+        });
+    }
+
+    @Override
+    public void onStart() {
         ArrayList<ListEntry> savedLists = IOUtil.loadListEntries(this);
-        if(savedLists != null && !savedLists.isEmpty()) {
+        if(savedLists != null) {
+            mListEntries.clear();
             mListEntries.addAll(savedLists);
         }
+        super.onStart();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_lists_overview, menu);
+        getMenuInflater().inflate(R.menu.menu_lists_overview, menu);
         return true;
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        if (v.getId()==R.id.lvListEntries) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.menu_list_entry_long_press, menu);
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, view, menuInfo);
+        if (view.getId()==R.id.lvListEntries) {
+            getMenuInflater().inflate(R.menu.menu_list_entry_long_press, menu);
         }
     }
 
@@ -64,7 +82,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
         ListEntry selectedListEntry = (ListEntry)lvListEntries.getItemAtPosition(info.position);
-
         switch(item.getItemId()) {
             case R.id.move_up:
                 moveListEntryUp(selectedListEntry);
@@ -87,7 +104,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-
     }
 
     @Override
@@ -101,38 +117,62 @@ public class ListsOverviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Moves the specified {@code ListEntry} up one position in the list.
+     * @param listEntry {@code ListEntry} to move.
+     */
     private void moveListEntryUp(ListEntry listEntry) {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != 0) {
             Collections.swap(mListEntries, listEntryIndex, listEntryIndex - 1);
             mListEntryListAdapter.notifyDataSetChanged();
+            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
+    /**
+     * Moves the specified {@code ListEntry} down one position in the list.
+     * @param listEntry {@code ListEntry} to move.
+     */
     private void moveListEntryDown(ListEntry listEntry) {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != mListEntries.size() - 1) {
             Collections.swap(mListEntries, listEntryIndex, listEntryIndex + 1);
             mListEntryListAdapter.notifyDataSetChanged();
+            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
+    /**
+     * Moves the specified {@code ListEntry} to the top of the list.
+     * @param listEntry {@code ListEntry} to move.
+     */
     private void sendListEntryToTop(ListEntry listEntry) {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != 0) {
-            Collections.swap(mListEntries, listEntryIndex, 0);
+            mListEntries.add(0, mListEntries.remove(listEntryIndex));
             mListEntryListAdapter.notifyDataSetChanged();
+            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
+    /**
+     * Moves the specified {@code ListEntry} to the bottom of the list.
+     * @param listEntry {@code ListEntry} to move.
+     */
     private void sendListEntryToBottom(ListEntry listEntry) {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != mListEntries.size() - 1) {
-            Collections.swap(mListEntries, listEntryIndex, mListEntries.size() - 1);
+            mListEntries.add(mListEntries.size() - 1, mListEntries.remove(listEntryIndex));
             mListEntryListAdapter.notifyDataSetChanged();
+            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
+    /**
+     * Renames the specified {@code ListEntry}.
+     * @param listEntry {@code ListEntry} to rename.
+     */
     private void renameListEntry(ListEntry listEntry, final String newName) {
         if(newName.length() < ListEntry.NAME_LENGTH_MIN_CHARACTERS) {
             Toast.makeText(this, String.format(getString(R.string.toast_rename_too_short), ListEntry.NAME_LENGTH_MIN_CHARACTERS), Toast.LENGTH_SHORT).show();
@@ -147,12 +187,19 @@ public class ListsOverviewActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Deletes the specified {@code ListEntry}.
+     * @param listEntry {@code ListEntry} to delete.
+     */
     private void deleteListEntry(ListEntry listEntry) {
         mListEntries.remove(listEntry);
         mListEntryListAdapter.notifyDataSetChanged();
         IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
     }
 
+    /**
+     * Prompts the user with a {@code DialogBox} to input a list name and creates a new {@code ListEntry}.
+     */
     private void promptUserToAddNewListEntry() {
         // Create an AlertDialog.Builder that will be used to prompt users to enter a name for the new list.
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -201,6 +248,10 @@ public class ListsOverviewActivity extends AppCompatActivity {
         alertDialogBuilder.create().show();
     }
 
+    /**
+     * Prompts the user with a {@code DialogBox} to rename the specified {@code ListEntry}.
+     * @param listEntry {@code ListEntry} to rename.
+     */
     private void promptUserToRenameListEntry(final ListEntry listEntry) {
         // Create an AlertDialog.Builder that will be used to prompt users to enter a new name for the list.
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
