@@ -7,11 +7,29 @@ import java.io.Serializable;
  */
 public class ListItem implements Serializable {
 
+    /** Default description value for '{@code ListItem}'s. */
+    private static final String DESCRIPTION_DEFAULT = "Unnamed List Item";
+
     /** Description of the {@code ListItem}, for example: "Make dinner". */
     private String mDescription;
 
     /** Completion state of the {@code ListItem} */
     private boolean mCompleted;
+
+    /**
+     * Initializes the {@code ListItem} with its default values.
+     */
+    ListItem() {
+
+    }
+
+    /**
+     * Initializes the {@code ListItem} with the specified description.
+     * @param description {@code ListItem}'s name.
+     */
+    ListItem(final String description) {
+        setDescription(description);
+    }
 
     /**
      * Set's the description of the {@code ListItem}}.
