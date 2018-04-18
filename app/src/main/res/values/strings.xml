@@ -4,4 +4,13 @@
     <string name="dialog_title_list_name">List Name</string>
     <string name="dialog_add_list_positive_button">ADD</string>
     <string name="dialog_add_list_negative_button">@android:string/cancel</string>
+    <string name="menu_long_press_delete">Delete</string>
+    <string name="menu_long_press_rename">Rename</string>
+    <string name="dialog_title_list_rename">Rename List</string>
+    <string name="toast_rename_too_short">Name too short (Minimum length: %d)</string>
+    <string name="toast_rename_too_long">Name too long (Maximum length: %d)</string>
+    <string name="menu_long_press_move_down">Move Down</string>
+    <string name="menu_long_press_move_up">Move Up</string>
+    <string name="menu_long_press_send_top">Send To Top</string>
+    <string name="menu_long_press_send_bottom">Sent To Bottom</string>
 </resources>

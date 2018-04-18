@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/move_up"
+        android:title="@string/menu_long_press_move_up" />
+
+    <item android:id="@+id/move_down"
+        android:title="@string/menu_long_press_move_down" />
+
+    <item android:id="@+id/send_top"
+        android:title="@string/menu_long_press_send_top" />
+
+    <item android:id="@+id/send_bottom"
+        android:title="@string/menu_long_press_send_bottom" />
+
+    <item android:id="@+id/rename"
+        android:title="@string/menu_long_press_rename" />
+
+    <item android:id="@+id/delete"
+        android:title="@string/menu_long_press_delete" />
+
+</menu>
