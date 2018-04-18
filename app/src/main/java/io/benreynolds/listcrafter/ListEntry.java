@@ -46,21 +46,18 @@ public class ListEntry implements Serializable {
      * Initializes the {@code ListEntry} with the specified name.
      * @param name {@code ListEntry}'s name.
      */
-    public ListEntry(final String name) {
+    ListEntry(final String name) {
         setName(name);
     }
 
     /**
      * Sets the name of the {@code ListEntry}.
      * @param name {@code ListEntry}'s name.'
-     * @return True if the name was successfully set, otherwise false (see {@code NAME_LENGTH_MIN_CHARACTERS} and {@code NAME_LENGTH_MAX_CHARACTERS}).
      */
-    public boolean setName(final String name) {
+    public void setName(final String name) {
         if(name.length() >= NAME_LENGTH_MIN_CHARACTERS && name.length() <= NAME_LENGTH_MAX_CHARACTERS) {
             mName = name;
-            return true;
         }
-        return false;
     }
 
     /**
