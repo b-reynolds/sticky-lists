@@ -20,14 +20,8 @@ public class ListEntry implements Serializable {
     /** Default name value for '{@code ListEntry}'s. */
     private static final String NAME_DEFAULT = "Unnamed List";
 
-    /** Default completion state for '{@code ListEntry}'s. */
-    private static final boolean COMPLETION_STATE_DEFAULT = false;
-
     /** Name of the {@code ListEntry}. */
     private String mName = NAME_DEFAULT;
-
-    /** Completion state of the {@code ListEntry}. */
-    private boolean mComplete = COMPLETION_STATE_DEFAULT;
 
     /** Date/time that the {@code ListEntry} was created. */
     private Date mDateCreated = Calendar.getInstance().getTime();
@@ -66,22 +60,6 @@ public class ListEntry implements Serializable {
      */
     public String getName() {
         return mName;
-    }
-
-    /**
-     * Set's the completion state of the {@code ListEntry}.
-     * @param complete Completion state of the {@code ListEntry}.
-     */
-    public void setComplete(boolean complete) {
-        mComplete = complete;
-    }
-
-    /**
-     * Returns the completion state of the {@code ListEntry}.
-     * @return Completion state of the {@code ListEntry}.
-     */
-    public boolean isComplete() {
-        return mComplete;
     }
 
     /**
