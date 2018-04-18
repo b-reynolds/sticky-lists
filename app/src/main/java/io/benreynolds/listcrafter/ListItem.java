@@ -7,6 +7,12 @@ import java.io.Serializable;
  */
 public class ListItem implements Serializable {
 
+    /** Minimum amount of characters required for a '{@code ListItem}'s description. */
+    public static final int DESCRIPTION_LENGTH_MIN_CHARACTERS = 1;
+
+    /** Maximum amount of characters allowed for a '{@code ListItem}'s description */
+    public static final int DESCRIPTION_LENGTH_MAX_CHARACTERS = 256;
+
     /** Default description value for '{@code ListItem}'s. */
     private static final String DESCRIPTION_DEFAULT = "Unnamed List Item";
 
@@ -36,7 +42,9 @@ public class ListItem implements Serializable {
      * @param description Description of the {@code ListItem}, for example: "Make dinner".
      */
     public void setDescription(final String description) {
-        mDescription = description;
+        if(description.length() >= DESCRIPTION_LENGTH_MIN_CHARACTERS && description.length() <= DESCRIPTION_LENGTH_MAX_CHARACTERS) {
+            mDescription = description;
+        }
     }
 
     /**
