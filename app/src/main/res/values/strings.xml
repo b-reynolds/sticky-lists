@@ -12,9 +12,10 @@
     <string name="menu_long_press_move_down">Move Down</string>
     <string name="menu_long_press_move_up">Move Up</string>
     <string name="menu_long_press_send_top">Send To Top</string>
-    <string name="menu_long_press_send_bottom">Sent To Bottom</string>
+    <string name="menu_long_press_send_bottom">Send To Bottom</string>
     <string name="action_add_item">Add Item</string>
     <string name="dialog_title_item_description">Item Description</string>
-    <string name="dialog_add_item_positive_button">ADD</string>
-    <string name="dialog_add_item_negative_button">CANCEL</string>
+    <string name="dialog_add_item_positive_button">Add</string>
+    <string name="dialog_add_item_negative_button">Cancel</string>
+    <string name="list_entry_adapter_items_completed">(%d/%d Complete)</string>
 </resources>
