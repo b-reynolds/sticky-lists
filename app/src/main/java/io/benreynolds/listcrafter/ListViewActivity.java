@@ -13,13 +13,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class ListViewActivity extends AppCompatActivity {
 
@@ -27,7 +30,6 @@ public class ListViewActivity extends AppCompatActivity {
 
     private ListEntry mListEntry;
 
-    final ArrayList<ListItem> mListItems = new ArrayList<>();
     private ListItemListAdapter mListItemListAdapter;
     private ListView lvListItems;
 
@@ -36,10 +38,32 @@ public class ListViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_view);
 
-        mListItemListAdapter = new ListItemListAdapter(this, mListItems);
         lvListItems = findViewById(R.id.lvListItems);
-        lvListItems.setAdapter(mListItemListAdapter);
         registerForContextMenu(lvListItems);
+
+        // Clear the currently stored 'ListEntry's and 'ListItem's.
+        mListEntries.clear();
+
+        // Load in the saved 'ListEntry's.
+        ArrayList<ListEntry> savedListEntries = IOUtil.loadListEntries(this);
+        if(savedListEntries != null) {
+            mListEntries.addAll(savedListEntries);
+        }
+
+        // Set the active ListEntry.
+        int activeListItemIndex = getIntent().getIntExtra(ListsOverviewActivity.EXTRA_SELECTED_LIST_INDEX, 0);
+        mListEntry = mListEntries.get(activeListItemIndex);
+
+        mListItemListAdapter = new ListItemListAdapter(this, mListEntry.getListItems());
+        lvListItems.setAdapter(mListItemListAdapter);
+        mListItemListAdapter.notifyDataSetChanged();
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            getSupportActionBar().setTitle(mListEntry.getName());
+        }
+
+
     }
 
     @Override
@@ -74,22 +98,22 @@ public class ListViewActivity extends AppCompatActivity {
         ListItem selectedListItem = (ListItem)lvListItems.getItemAtPosition(info.position);
         switch(item.getItemId()) {
             case R.id.move_up:
-                moveListItemUp(selectedListItem);
+                ListUtils.moveListObjectUp(selectedListItem, mListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;
             case R.id.move_down:
-                moveListItemDown(selectedListItem);
+                ListUtils.moveListObjectDown(selectedListItem, mListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;
             case R.id.send_top:
-                sendListItemToTop(selectedListItem);
+                ListUtils.sendListObjectToTop(selectedListItem, mListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;
             case R.id.send_bottom:
-                sendListItemToBottom(selectedListItem);
+                ListUtils.sendListObjectToBottom(selectedListItem, mListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;
             case R.id.rename:
                 promptUserToRenameListItem(selectedListItem);
                 return true;
             case R.id.delete:
-                deleteListItem(selectedListItem);
+                ListUtils.deleteListObject(selectedListItem, mListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -104,82 +128,8 @@ public class ListViewActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        // Clear the currently stored 'ListEntry's and 'ListItem's.
-        mListEntries.clear();
-        mListItems.clear();
-
-        // Load in the saved 'ListEntry's.
-        ArrayList<ListEntry> savedListEntries = IOUtil.loadListEntries(this);
-        if(savedListEntries != null) {
-            mListEntries.addAll(savedListEntries);
-        }
-
-        // Set the active ListEntry.
-        int activeListItemIndex = getIntent().getIntExtra(ListsOverviewActivity.EXTRA_SELECTED_LIST_INDEX, 0);
-        mListEntry = mListEntries.get(activeListItemIndex);
-
-        // Clear and repopulate the active 'ListEntry's 'ListItem's.
-        mListItems.addAll(mListEntry.getListItems());
-        mListItemListAdapter.notifyDataSetChanged();
-
-        ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null) {
-            getSupportActionBar().setTitle(mListEntry.getName());
-        }
 
         super.onResume();
-    }
-
-    /**
-     * Moves the specified {@code ListItem} up one position in the list.
-     * @param listItem {@code ListItem} to move.
-     */
-    private void moveListItemUp(ListItem listItem) {
-        int listItemIndex = mListItems.indexOf(listItem);
-        if(listItemIndex != 0) {
-            Collections.swap(mListItems, listItemIndex, listItemIndex - 1);
-            lvListItems.setAdapter(mListItemListAdapter);
-            mListItemListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListItem} down one position in the list.
-     * @param listItem {@code ListItem} to move.
-     */
-    private void moveListItemDown(ListItem listItem) {
-        int listItemIndex = mListItems.indexOf(listItem);
-        if(listItemIndex != mListItems.size() - 1) {
-            Collections.swap(mListItems, listItemIndex, listItemIndex + 1);
-            lvListItems.setAdapter(mListItemListAdapter);
-            mListItemListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListItem} to the top of the list.
-     * @param listItem {@code ListItem} to move.
-     */
-    private void sendListItemToTop(ListItem listItem) {
-        int listItemIndex = mListItems.indexOf(listItem);
-        if(listItemIndex != 0) {
-            mListItems.add(0, mListItems.remove(listItemIndex));
-            lvListItems.setAdapter(mListItemListAdapter);
-            mListItemListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListItem} to the bottom of the list.
-     * @param listItem {@code ListItem} to move.
-     */
-    private void sendListItemToBottom(ListItem listItem) {
-        int listItemIndex = mListItems.indexOf(listItem);
-        if(listItemIndex != mListItems.size() - 1) {
-            mListItems.add(mListItems.size() - 1, mListItems.remove(listItemIndex));
-            lvListItems.setAdapter(mListItemListAdapter);
-            mListItemListAdapter.notifyDataSetChanged();
-        }
     }
 
     /**
@@ -200,15 +150,6 @@ public class ListViewActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Deletes the specified {@code ListItem}.
-     * @param listItem {@code ListItem} to delete.
-     */
-    private void deleteListItem(ListItem listItem) {
-        mListItems.remove(listItem);
-        lvListItems.setAdapter(mListItemListAdapter);
-        mListItemListAdapter.notifyDataSetChanged();
-    }
 
     /**
      * Prompts the user with a {@code DialogBox} to rename the specified {@code ListItem}.
@@ -238,7 +179,7 @@ public class ListViewActivity extends AppCompatActivity {
         alertDialogBuilder.setView(frameLayout);
 
         // Set the title text of the DialogBox.
-        alertDialogBuilder.setTitle(R.string.dialog_title_list_rename);
+        alertDialogBuilder.setTitle(R.string.dialog_title_item_rename);
 
         // Add a positive button to the DialogBox that changes the description of the ListItem.
         alertDialogBuilder.setPositiveButton(R.string.dialog_rename_item_positive_button, new DialogInterface.OnClickListener() {
@@ -294,7 +235,6 @@ public class ListViewActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mListEntry.addListItem(new ListItem(etItemDescription.getText().toString().trim()));
-                mListItems.add(mListEntry.getListItems().get(mListEntry.getListItems().size() - 1));
                 mListItemListAdapter.notifyDataSetChanged();
             }
         });

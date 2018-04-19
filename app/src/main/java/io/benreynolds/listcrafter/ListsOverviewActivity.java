@@ -39,7 +39,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
 
         mListEntryListAdapter = new ListEntryListAdapter(this, mListEntries);
         lvListEntries = findViewById(R.id.lvListEntries);
-        lvListEntries.setAdapter(mListEntryListAdapter);
         registerForContextMenu(lvListEntries);
 
         lvListEntries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -52,14 +51,21 @@ public class ListsOverviewActivity extends AppCompatActivity {
         });
     }
 
+
     @Override
     public void onResume() {
+
+        mListEntries.clear();
+
         ArrayList<ListEntry> savedLists = IOUtil.loadListEntries(this);
         if(savedLists != null) {
-            mListEntries.clear();
             mListEntries.addAll(savedLists);
-            mListEntryListAdapter.notifyDataSetChanged();
         }
+
+        lvListEntries.setAdapter(mListEntryListAdapter);
+        mListEntryListAdapter.notifyDataSetChanged();
+
+
         super.onResume();
     }
 
@@ -90,22 +96,22 @@ public class ListsOverviewActivity extends AppCompatActivity {
         ListEntry selectedListEntry = (ListEntry)lvListEntries.getItemAtPosition(info.position);
         switch(item.getItemId()) {
             case R.id.move_up:
-                moveListEntryUp(selectedListEntry);
+                ListUtils.moveListObjectUp(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
             case R.id.move_down:
-                moveListEntryDown(selectedListEntry);
+                ListUtils.moveListObjectDown(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
             case R.id.send_top:
-                sendListEntryToTop(selectedListEntry);
+                ListUtils.sendListObjectToTop(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
             case R.id.send_bottom:
-                sendListEntryToBottom(selectedListEntry);
+                ListUtils.sendListObjectToBottom(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
             case R.id.rename:
                 promptUserToRenameListEntry(selectedListEntry);
                 return true;
             case R.id.delete:
-                deleteListEntry(selectedListEntry);
+                ListUtils.deleteListObject(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -124,58 +130,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
     }
 
     /**
-     * Moves the specified {@code ListEntry} up one position in the list.
-     * @param listEntry {@code ListEntry} to move.
-     */
-    private void moveListEntryUp(ListEntry listEntry) {
-        int listEntryIndex = mListEntries.indexOf(listEntry);
-        if(listEntryIndex != 0) {
-            Collections.swap(mListEntries, listEntryIndex, listEntryIndex - 1);
-            lvListEntries.setAdapter(mListEntryListAdapter);
-            mListEntryListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListEntry} down one position in the list.
-     * @param listEntry {@code ListEntry} to move.
-     */
-    private void moveListEntryDown(ListEntry listEntry) {
-        int listEntryIndex = mListEntries.indexOf(listEntry);
-        if(listEntryIndex != mListEntries.size() - 1) {
-            Collections.swap(mListEntries, listEntryIndex, listEntryIndex + 1);
-            lvListEntries.setAdapter(mListEntryListAdapter);
-            mListEntryListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListEntry} to the top of the list.
-     * @param listEntry {@code ListEntry} to move.
-     */
-    private void sendListEntryToTop(ListEntry listEntry) {
-        int listEntryIndex = mListEntries.indexOf(listEntry);
-        if(listEntryIndex != 0) {
-            mListEntries.add(0, mListEntries.remove(listEntryIndex));
-            lvListEntries.setAdapter(mListEntryListAdapter);
-            mListEntryListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
-     * Moves the specified {@code ListEntry} to the bottom of the list.
-     * @param listEntry {@code ListEntry} to move.
-     */
-    private void sendListEntryToBottom(ListEntry listEntry) {
-        int listEntryIndex = mListEntries.indexOf(listEntry);
-        if(listEntryIndex != mListEntries.size() - 1) {
-            mListEntries.add(mListEntries.size() - 1, mListEntries.remove(listEntryIndex));
-            lvListEntries.setAdapter(mListEntryListAdapter);
-            mListEntryListAdapter.notifyDataSetChanged();
-        }
-    }
-
-    /**
      * Renames the specified {@code ListEntry}.
      * @param listEntry {@code ListEntry} to rename.
      */
@@ -190,17 +144,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
             listEntry.setName(newName);
             mListEntryListAdapter.notifyDataSetChanged();
         }
-    }
-
-    /**
-     * Deletes the specified {@code ListEntry}.
-     * @param listEntry {@code ListEntry} to delete.
-     */
-    private void deleteListEntry(ListEntry listEntry) {
-        mListEntries.remove(listEntry);
-        lvListEntries.setAdapter(mListEntryListAdapter);
-        mListEntryListAdapter.notifyDataSetChanged();
-        IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
     }
 
     /**

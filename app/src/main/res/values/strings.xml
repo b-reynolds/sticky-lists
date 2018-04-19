@@ -22,4 +22,5 @@
     <string name="dialog_rename_item_positive_button">Rename</string>
     <string name="dialog_rename_item_negative_button">@android:string/cancel</string>
     <string name="list_entry_adapter_items_completed">(%d/%d Complete)</string>
+    <string name="dialog_title_item_rename">Rename Item</string>
 </resources>

@@ -27,7 +27,7 @@ public class ListEntry implements Serializable {
     private Date mDateCreated = Calendar.getInstance().getTime();
 
     /** Collection of '{@code ListItem}'s that belong to the {@code ListEntry}. */
-    private List<ListItem> mListItems = new ArrayList<>();
+    private ArrayList<ListItem> mListItems = new ArrayList<>();
 
     /**
      * Initializes the {@code ListEntry} with its default values.
@@ -90,7 +90,7 @@ public class ListEntry implements Serializable {
      * Returns the '{@code ListItem}s that belong to the {@code ListEntry}.
      * @return '{@code ListItem}s that belong to the {@code ListEntry}.
      */
-    public List<ListItem> getListItems() {
+    public ArrayList<ListItem> getListItems() {
         return mListItems;
     }
 
