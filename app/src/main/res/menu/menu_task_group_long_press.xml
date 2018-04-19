@@ -2,6 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/set_colour"
+        android:title="@string/menu_long_press_set_colour" >
+        <menu >
+            <item
+                android:id="@+id/colour_yellow"
+                android:title="@string/menu_long_press_set_colour_yellow" />
+
+            <item
+                android:id="@+id/colour_orange"
+                android:title="@string/menu_long_press_set_colour_orange" />
+
+            <item
+                android:id="@+id/colour_green"
+                android:title="@string/menu_long_press_set_colour_green" />
+
+            <item
+                android:id="@+id/colour_blue"
+                android:title="@string/menu_long_press_set_colour_blue" />
+        </menu>
+    </item>
+
+    <item
         android:id="@+id/move_up"
         android:title="@string/menu_long_press_move_up" />
 

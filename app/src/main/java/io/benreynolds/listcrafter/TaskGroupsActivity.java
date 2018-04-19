@@ -27,6 +27,8 @@ public class TaskGroupsActivity extends AppCompatActivity {
     private TaskGroupListAdapter mTaskGroupListAdapter;
     private ListView lvListEntries;
 
+    private int mContextMenuInfoPosition;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,9 +88,22 @@ public class TaskGroupsActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        TaskGroup selectedTaskGroup = (TaskGroup)lvListEntries.getItemAtPosition(info.position);
+        AdapterView.AdapterContextMenuInfo info;
+
+        try {
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        }
+        catch(ClassCastException exception) {
+            return false;
+        }
+
+        if(info != null) {
+            mContextMenuInfoPosition = info.position;
+        }
+
+        TaskGroup selectedTaskGroup = (TaskGroup)lvListEntries.getItemAtPosition(mContextMenuInfoPosition);
+
         switch(item.getItemId()) {
             case R.id.move_up:
                 ListViewUtils.moveListObjectUp(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
@@ -110,6 +125,22 @@ public class TaskGroupsActivity extends AppCompatActivity {
                 return true;
             case R.id.delete:
                 ListViewUtils.deleteListObject(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                return true;
+            case R.id.colour_yellow:
+                selectedTaskGroup.setColor(TaskGroup.COLOR_YELLOW);
+                mTaskGroupListAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.colour_green:
+                selectedTaskGroup.setColor(TaskGroup.COLOR_GREEN);
+                mTaskGroupListAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.colour_orange:
+                selectedTaskGroup.setColor(TaskGroup.COLOR_ORANGE);
+                mTaskGroupListAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.colour_blue:
+                selectedTaskGroup.setColor(TaskGroup.COLOR_BLUE);
+                mTaskGroupListAdapter.notifyDataSetChanged();
                 return true;
             default:
                 return super.onContextItemSelected(item);

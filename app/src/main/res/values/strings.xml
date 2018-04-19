@@ -27,5 +27,10 @@
     <string name="menu_long_press_send_top">Send To Top</string>
     <string name="menu_long_press_send_bottom">Send To Bottom</string>
     <string name="menu_long_press_duplicate">Duplicate</string>
+    <string name="menu_long_press_set_colour">Set Colour</string>
+    <string name="menu_long_press_set_colour_yellow">Yellow</string>
+    <string name="menu_long_press_set_colour_orange">Orange</string>
+    <string name="menu_long_press_set_colour_green">Green</string>
+    <string name="menu_long_press_set_colour_blue">Blue</string>
 
 </resources>

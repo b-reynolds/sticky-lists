@@ -1,5 +1,8 @@
 package io.benreynolds.listcrafter;
 
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -9,6 +12,15 @@ import java.util.Date;
  * {@code TaskGroup} represents a collection of '{@code Task}'s.
  */
 public class TaskGroup implements Serializable {
+
+    /** Available {@code TaskGroup} colors  **/
+    public static final int COLOR_YELLOW = Color.parseColor("#FFF982");
+    public static final int COLOR_GREEN = Color.parseColor("#A1FFA5");
+    public static final int COLOR_ORANGE = Color.parseColor("#FFCBA6");
+    public static final int COLOR_BLUE = Color.parseColor("#CCF5FF");
+
+    /** Default color assigned to new '{@code TaskGroup}'s **/
+    private static final int COLOR_DEFAULT = COLOR_YELLOW;
 
     /** Minimum amount of characters required for a '{@code TaskGroup}'s name */
     public static final int NAME_LENGTH_MIN_CHARACTERS = 1;
@@ -24,6 +36,9 @@ public class TaskGroup implements Serializable {
 
     /** Date/time that the {@code TaskGroup} was created. */
     private Date mDateCreated = Calendar.getInstance().getTime();
+
+    /** Task colour */
+    private int mColor = COLOR_DEFAULT;
 
     /** Collection of '{@code Task}'s that belong to the {@code TaskGroup}. */
     private ArrayList<Task> mTasks = new ArrayList<>();
@@ -75,6 +90,22 @@ public class TaskGroup implements Serializable {
      */
     public Date getDateCreated() {
         return mDateCreated;
+    }
+
+    /**
+     * Sets the '{@code TaskGroup}'s color
+     * @param color Color to set.
+     */
+    public void setColor(final int color) {
+        mColor = color;
+    }
+
+    /**
+     * Returns the '{@code TaskGroup}'s color.
+     * @return '{@code TaskGroup}'s color.
+     */
+    public int getColor() {
+        return mColor;
     }
 
     /**
