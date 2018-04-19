@@ -64,6 +64,12 @@ public class ListsOverviewActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        IOUtil.saveListEntries(this, mListEntries);
+        super.onPause();
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_lists_overview, menu);
         return true;
@@ -125,8 +131,8 @@ public class ListsOverviewActivity extends AppCompatActivity {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != 0) {
             Collections.swap(mListEntries, listEntryIndex, listEntryIndex - 1);
+            lvListEntries.setAdapter(mListEntryListAdapter);
             mListEntryListAdapter.notifyDataSetChanged();
-            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
@@ -138,8 +144,8 @@ public class ListsOverviewActivity extends AppCompatActivity {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != mListEntries.size() - 1) {
             Collections.swap(mListEntries, listEntryIndex, listEntryIndex + 1);
+            lvListEntries.setAdapter(mListEntryListAdapter);
             mListEntryListAdapter.notifyDataSetChanged();
-            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
@@ -151,8 +157,8 @@ public class ListsOverviewActivity extends AppCompatActivity {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != 0) {
             mListEntries.add(0, mListEntries.remove(listEntryIndex));
+            lvListEntries.setAdapter(mListEntryListAdapter);
             mListEntryListAdapter.notifyDataSetChanged();
-            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
@@ -164,8 +170,8 @@ public class ListsOverviewActivity extends AppCompatActivity {
         int listEntryIndex = mListEntries.indexOf(listEntry);
         if(listEntryIndex != mListEntries.size() - 1) {
             mListEntries.add(mListEntries.size() - 1, mListEntries.remove(listEntryIndex));
+            lvListEntries.setAdapter(mListEntryListAdapter);
             mListEntryListAdapter.notifyDataSetChanged();
-            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
@@ -183,7 +189,6 @@ public class ListsOverviewActivity extends AppCompatActivity {
         else {
             listEntry.setName(newName);
             mListEntryListAdapter.notifyDataSetChanged();
-            IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
         }
     }
 
@@ -193,6 +198,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
      */
     private void deleteListEntry(ListEntry listEntry) {
         mListEntries.remove(listEntry);
+        lvListEntries.setAdapter(mListEntryListAdapter);
         mListEntryListAdapter.notifyDataSetChanged();
         IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
     }
@@ -279,7 +285,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
         alertDialogBuilder.setTitle(R.string.dialog_title_list_rename);
 
         // Add a positive button to the DialogBox that renames the ListEntry.
-        alertDialogBuilder.setPositiveButton(R.string.dialog_add_list_positive_button, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.dialog_rename_list_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 renameListEntry(listEntry, etListName.getText().toString());
@@ -287,7 +293,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
         });
 
         // Add a negative button to the DialogBox that closes the DialogBox and does not rename the ListEntry.
-        alertDialogBuilder.setNegativeButton(R.string.dialog_add_list_negative_button, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_rename_list_negative_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
