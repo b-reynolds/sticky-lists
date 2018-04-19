@@ -6,45 +6,40 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputFilter;
-import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 /**
- * {@code ListsOverviewActivity} is the root activity of the application, it allows users to create and manage '{@code ListEntry}'s.
+ * {@code TaskGroupsActivity} is the root activity of the application, it allows users to create and manage '{@code TaskGroup}'s.
  */
-public class ListsOverviewActivity extends AppCompatActivity {
+public class TaskGroupsActivity extends AppCompatActivity {
 
     public static final String EXTRA_SELECTED_LIST_INDEX = "SELECTED_LIST_INDEX";
 
-    final ArrayList<ListEntry> mListEntries = new ArrayList<>();
-    private ListEntryListAdapter mListEntryListAdapter;
+    final ArrayList<TaskGroup> mListEntries = new ArrayList<>();
+    private TaskGroupListAdapter mTaskGroupListAdapter;
     private ListView lvListEntries;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lists_overview);
+        setContentView(R.layout.activity_task_groups);
 
-        mListEntryListAdapter = new ListEntryListAdapter(this, mListEntries);
+        mTaskGroupListAdapter = new TaskGroupListAdapter(this, mListEntries);
         lvListEntries = findViewById(R.id.lvListEntries);
         registerForContextMenu(lvListEntries);
 
         lvListEntries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent startListViewActivity = new Intent(view.getContext(), ListViewActivity.class);
+                Intent startListViewActivity = new Intent(view.getContext(), TaskActivity.class);
                 startListViewActivity.putExtra(EXTRA_SELECTED_LIST_INDEX, position);
                 startActivity(startListViewActivity);
             }
@@ -57,13 +52,13 @@ public class ListsOverviewActivity extends AppCompatActivity {
 
         mListEntries.clear();
 
-        ArrayList<ListEntry> savedLists = IOUtil.loadListEntries(this);
+        ArrayList<TaskGroup> savedLists = IOUtils.loadListEntries(this);
         if(savedLists != null) {
             mListEntries.addAll(savedLists);
         }
 
-        lvListEntries.setAdapter(mListEntryListAdapter);
-        mListEntryListAdapter.notifyDataSetChanged();
+        lvListEntries.setAdapter(mTaskGroupListAdapter);
+        mTaskGroupListAdapter.notifyDataSetChanged();
 
 
         super.onResume();
@@ -71,13 +66,13 @@ public class ListsOverviewActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        IOUtil.saveListEntries(this, mListEntries);
+        IOUtils.saveListEntries(this, mListEntries);
         super.onPause();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_lists_overview, menu);
+        getMenuInflater().inflate(R.menu.menu_task_groups_activity, menu);
         return true;
     }
 
@@ -85,7 +80,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
         if (view.getId()==R.id.lvListEntries) {
-            getMenuInflater().inflate(R.menu.menu_list_entry_long_press, menu);
+            getMenuInflater().inflate(R.menu.menu_task_group_long_press, menu);
         }
     }
 
@@ -93,28 +88,28 @@ public class ListsOverviewActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        ListEntry selectedListEntry = (ListEntry)lvListEntries.getItemAtPosition(info.position);
+        TaskGroup selectedTaskGroup = (TaskGroup)lvListEntries.getItemAtPosition(info.position);
         switch(item.getItemId()) {
             case R.id.move_up:
-                ListUtils.moveListObjectUp(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.moveListObjectUp(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             case R.id.move_down:
-                ListUtils.moveListObjectDown(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.moveListObjectDown(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             case R.id.send_top:
-                ListUtils.sendListObjectToTop(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.sendListObjectToTop(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             case R.id.send_bottom:
-                ListUtils.sendListObjectToBottom(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.sendListObjectToBottom(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             case R.id.rename:
-                promptUserToRenameListEntry(selectedListEntry);
+                promptUserToRenameListEntry(selectedTaskGroup);
                 return true;
             case R.id.duplicate:
-                ListUtils.duplicateListObject(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.duplicateListObject(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             case R.id.delete:
-                ListUtils.deleteListObject(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                ListViewUtils.deleteListObject(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -133,21 +128,21 @@ public class ListsOverviewActivity extends AppCompatActivity {
     }
 
     /**
-     * Renames the specified {@code ListEntry}.
-     * @param listEntry {@code ListEntry} to rename.
+     * Renames the specified {@code TaskGroup}.
+     * @param taskGroup {@code TaskGroup} to rename.
      */
-    private void renameListEntry(ListEntry listEntry, final String newName) {
-        if(newName.length() >= ListEntry.NAME_LENGTH_MIN_CHARACTERS && newName.length() <= ListEntry.NAME_LENGTH_MAX_CHARACTERS) {
-            listEntry.setName(newName);
-            mListEntryListAdapter.notifyDataSetChanged();
+    private void renameListEntry(TaskGroup taskGroup, final String newName) {
+        if(newName.length() >= TaskGroup.NAME_LENGTH_MIN_CHARACTERS && newName.length() <= TaskGroup.NAME_LENGTH_MAX_CHARACTERS) {
+            taskGroup.setName(newName);
+            mTaskGroupListAdapter.notifyDataSetChanged();
         }
     }
 
     /**
-     * Prompts the user with a {@code DialogBox} to input a list name and creates a new {@code ListEntry}.
+     * Prompts the user with a {@code DialogBox} to input a list name and creates a new {@code TaskGroup}.
      */
     private void promptUserToAddNewListEntry() {
-        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, ListItem.DESCRIPTION_LENGTH_MAX_CHARACTERS);
+        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, Task.DESCRIPTION_LENGTH_MAX_CHARACTERS);
         if(singleLineAlertDialogPair.first == null || singleLineAlertDialogPair.second == null) {
             return;
         }
@@ -156,20 +151,20 @@ public class ListsOverviewActivity extends AppCompatActivity {
         final EditText etItemName = singleLineAlertDialogPair.second;
 
         // Set the title text of the DialogBox.
-        alertDialogBuilder.setTitle(R.string.dialog_title_list_name);
+        alertDialogBuilder.setTitle(R.string.dialog_task_group_name);
 
         // Add a positive button to the DialogBox that adds a new list that is named as requested.
-        alertDialogBuilder.setPositiveButton(R.string.dialog_add_list_positive_button, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton(R.string.dialog_add_task_group_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListEntries.add(new ListEntry(etItemName.getText().toString().trim()));
-                mListEntryListAdapter.notifyDataSetChanged();
-                IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
+                mListEntries.add(new TaskGroup(etItemName.getText().toString().trim()));
+                mTaskGroupListAdapter.notifyDataSetChanged();
+                IOUtils.saveListEntries(TaskGroupsActivity.this, mListEntries);
             }
         });
 
         // Add a negative button to the DialogBox that closes the DialogBox and does not add any new lists.
-        alertDialogBuilder.setNegativeButton(R.string.dialog_add_list_negative_button, new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(R.string.dialog_add_task_group_negative_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -181,11 +176,11 @@ public class ListsOverviewActivity extends AppCompatActivity {
     }
 
     /**
-     * Prompts the user with a {@code DialogBox} to rename the specified {@code ListEntry}.
-     * @param listEntry {@code ListEntry} to rename.
+     * Prompts the user with a {@code DialogBox} to rename the specified {@code TaskGroup}.
+     * @param taskGroup {@code TaskGroup} to rename.
      */
-    private void promptUserToRenameListEntry(final ListEntry listEntry) {
-        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, ListItem.DESCRIPTION_LENGTH_MAX_CHARACTERS);
+    private void promptUserToRenameListEntry(final TaskGroup taskGroup) {
+        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, Task.DESCRIPTION_LENGTH_MAX_CHARACTERS);
         if(singleLineAlertDialogPair.first == null || singleLineAlertDialogPair.second == null) {
             return;
         }
@@ -194,20 +189,20 @@ public class ListsOverviewActivity extends AppCompatActivity {
         final EditText etItemName = singleLineAlertDialogPair.second;
 
         // Set the title text of the DialogBox.
-        alertDialogBuilder.setTitle(R.string.dialog_title_list_rename);
-        etItemName.setText(listEntry.getName());
+        alertDialogBuilder.setTitle(R.string.dialog_task_group_rename);
+        etItemName.setText(taskGroup.getName());
         etItemName.setSelection(etItemName.getText().length());
 
-        // Add a positive button to the DialogBox that renames the ListEntry.
-        alertDialogBuilder.setPositiveButton(R.string.dialog_rename_list_positive_button, new DialogInterface.OnClickListener() {
+        // Add a positive button to the DialogBox that renames the TaskGroup.
+        alertDialogBuilder.setPositiveButton(R.string.dialog_rename_task_group_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                renameListEntry(listEntry, etItemName.getText().toString());
+                renameListEntry(taskGroup, etItemName.getText().toString());
             }
         });
 
-        // Add a negative button to the DialogBox that closes the DialogBox and does not rename the ListEntry.
-        alertDialogBuilder.setNegativeButton(R.string.dialog_rename_list_negative_button, new DialogInterface.OnClickListener() {
+        // Add a negative button to the DialogBox that closes the DialogBox and does not rename the TaskGroup.
+        alertDialogBuilder.setNegativeButton(R.string.dialog_rename_task_group_negative_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();

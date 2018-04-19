@@ -6,7 +6,7 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class ListUtils {
+public class ListViewUtils {
 
     /**
      * Moves the specified {@code Object} up one position in the list and updates all of the respective collections.

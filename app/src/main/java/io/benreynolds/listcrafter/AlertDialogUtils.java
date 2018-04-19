@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 public class AlertDialogUtils {
 
     public static Pair<AlertDialog.Builder, EditText> getSingleLineInputDialog(final Context context, final int maxCharacters) {
-        // Create an AlertDialog.Builder that will be used to prompt users to enter a new description for the ListItem.
+        // Create an AlertDialog.Builder that will be used to prompt users to enter a new description for the Task.
         final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
 
         // Create a frame layout with an increased left and right margin so that the EditText box will look nicer.

@@ -1,24 +1,24 @@
 <resources>
     <string name="app_name">List Crafter</string>
 
-    <string name="action_add_list">Add List</string>
-    <string name="action_add_item">Add Item</string>
+    <string name="action_add_task_group">Add Task Group</string>
+    <string name="action_add_task">Add Task</string>
 
-    <string name="dialog_title_list_name">List Name</string>
-    <string name="dialog_title_list_rename">Rename List</string>
-    <string name="dialog_add_list_positive_button">Add</string>
-    <string name="dialog_add_list_negative_button">@android:string/cancel</string>
-    <string name="dialog_rename_list_positive_button">Rename</string>
-    <string name="dialog_rename_list_negative_button">@android:string/cancel</string>
+    <string name="dialog_task_group_name">Task Group Name</string>
+    <string name="dialog_task_group_rename">Rename Task Group</string>
+    <string name="dialog_add_task_group_positive_button">Add</string>
+    <string name="dialog_add_task_group_negative_button">@android:string/cancel</string>
+    <string name="dialog_rename_task_group_positive_button">Rename</string>
+    <string name="dialog_rename_task_group_negative_button">@android:string/cancel</string>
 
-    <string name="dialog_title_item_description">Item Description</string>
-    <string name="dialog_title_item_rename">Rename Item</string>
-    <string name="dialog_add_item_positive_button">Add</string>
-    <string name="dialog_add_item_negative_button">@android:string/cancel</string>
-    <string name="dialog_rename_item_positive_button">Rename</string>
-    <string name="dialog_rename_item_negative_button">@android:string/cancel</string>
+    <string name="dialog_title_task_description">Task Description</string>
+    <string name="dialog_title_task_rename">Rename Task</string>
+    <string name="dialog_add_task_positive_button">Add</string>
+    <string name="dialog_add_task_negative_button">@android:string/cancel</string>
+    <string name="dialog_rename_task_positive_button">Rename</string>
+    <string name="dialog_rename_task_negative_button">@android:string/cancel</string>
 
-    <string name="list_entry_adapter_items_completed">(%d/%d Complete)</string>
+    <string name="task_group_row_items_completed">(%d/%d Complete)</string>
 
     <string name="menu_long_press_delete">Delete</string>
     <string name="menu_long_press_rename">Rename</string>

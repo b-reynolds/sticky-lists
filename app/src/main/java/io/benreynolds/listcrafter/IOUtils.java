@@ -9,11 +9,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-public class IOUtil {
+public class IOUtils {
 
     private static final String FILE_LIST_ENTRIES = "list_entries.ser";
 
-    public static boolean saveListEntries(final Context context, final ArrayList<ListEntry> listEntries) {
+    public static boolean saveListEntries(final Context context, final ArrayList<TaskGroup> listEntries) {
         try {
             FileOutputStream fileOutputStream = context.openFileOutput(FILE_LIST_ENTRIES, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -31,12 +31,12 @@ public class IOUtil {
     }
 
     @SuppressWarnings("unchecked")
-    public static ArrayList<ListEntry> loadListEntries(final Context context) {
+    public static ArrayList<TaskGroup> loadListEntries(final Context context) {
         try {
             FileInputStream fileInputStream = context.openFileInput(FILE_LIST_ENTRIES);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
 
-            ArrayList<ListEntry> listEntries = (ArrayList<ListEntry>) objectInputStream.readObject();
+            ArrayList<TaskGroup> listEntries = (ArrayList<TaskGroup>) objectInputStream.readObject();
             objectInputStream.close();
             fileInputStream.close();
             return listEntries;
