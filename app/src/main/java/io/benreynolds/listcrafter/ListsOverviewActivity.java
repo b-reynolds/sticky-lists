@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -19,7 +20,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * {@code ListsOverviewActivity} is the root activity of the application, it allows users to create and manage '{@code ListEntry}'s.
@@ -150,27 +150,13 @@ public class ListsOverviewActivity extends AppCompatActivity {
      * Prompts the user with a {@code DialogBox} to input a list name and creates a new {@code ListEntry}.
      */
     private void promptUserToAddNewListEntry() {
-        // Create an AlertDialog.Builder that will be used to prompt users to enter a name for the new list.
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, ListItem.DESCRIPTION_LENGTH_MAX_CHARACTERS);
+        if(singleLineAlertDialogPair.first == null || singleLineAlertDialogPair.second == null) {
+            return;
+        }
 
-        // Create a frame layout with an increased left and right margin so that the EditText box will look nicer.
-        FrameLayout frameLayout = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        layoutParams.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-
-        // Create the EditText that will be used by users to enter their desired list name,
-        final EditText etListName = new EditText(this);
-
-        // Assign the previously defined layout parameters to the EditText and apply properties that aim to restrict invalid data entry.
-        etListName.setLayoutParams(layoutParams);
-        etListName.setInputType(InputType.TYPE_CLASS_TEXT);
-        etListName.setFilters( new InputFilter[] { new InputFilter.LengthFilter(ListEntry.NAME_LENGTH_MAX_CHARACTERS) } );
-        etListName.setSingleLine();
-
-        // Add the EditText to the FrameLayout, and assign the FrameLayout to the 'DialogBox's view.
-        frameLayout.addView(etListName);
-        alertDialogBuilder.setView(frameLayout);
+        final AlertDialog.Builder alertDialogBuilder = singleLineAlertDialogPair.first;
+        final EditText etItemName = singleLineAlertDialogPair.second;
 
         // Set the title text of the DialogBox.
         alertDialogBuilder.setTitle(R.string.dialog_title_list_name);
@@ -179,7 +165,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton(R.string.dialog_add_list_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListEntries.add(new ListEntry(etListName.getText().toString().trim()));
+                mListEntries.add(new ListEntry(etItemName.getText().toString().trim()));
                 mListEntryListAdapter.notifyDataSetChanged();
                 IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
             }
@@ -202,36 +188,24 @@ public class ListsOverviewActivity extends AppCompatActivity {
      * @param listEntry {@code ListEntry} to rename.
      */
     private void promptUserToRenameListEntry(final ListEntry listEntry) {
-        // Create an AlertDialog.Builder that will be used to prompt users to enter a new name for the list.
-        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        Pair<AlertDialog.Builder, EditText> singleLineAlertDialogPair = AlertDialogUtils.getSingleLineInputDialog(this, ListItem.DESCRIPTION_LENGTH_MAX_CHARACTERS);
+        if(singleLineAlertDialogPair.first == null || singleLineAlertDialogPair.second == null) {
+            return;
+        }
 
-        // Create a frame layout with an increased left and right margin so that the EditText box will look nicer.
-        FrameLayout frameLayout = new FrameLayout(this);
-        FrameLayout.LayoutParams layoutParams = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParams.leftMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-        layoutParams.rightMargin = getResources().getDimensionPixelSize(R.dimen.dialog_margin);
-
-        // Create the EditText that will be used by users to enter their desired list name,
-        final EditText etListName = new EditText(this);
-
-        // Assign the previously defined layout parameters to the EditText and apply properties that aim to restrict invalid data entry.
-        etListName.setLayoutParams(layoutParams);
-        etListName.setInputType(InputType.TYPE_CLASS_TEXT);
-        etListName.setFilters( new InputFilter[] { new InputFilter.LengthFilter(ListEntry.NAME_LENGTH_MAX_CHARACTERS) } );
-        etListName.setSingleLine();
-
-        // Add the EditText to the FrameLayout, and assign the FrameLayout to the 'DialogBox's view.
-        frameLayout.addView(etListName);
-        alertDialogBuilder.setView(frameLayout);
+        final AlertDialog.Builder alertDialogBuilder = singleLineAlertDialogPair.first;
+        final EditText etItemName = singleLineAlertDialogPair.second;
 
         // Set the title text of the DialogBox.
         alertDialogBuilder.setTitle(R.string.dialog_title_list_rename);
+        etItemName.setText(listEntry.getName());
+        etItemName.setSelection(etItemName.getText().length());
 
         // Add a positive button to the DialogBox that renames the ListEntry.
         alertDialogBuilder.setPositiveButton(R.string.dialog_rename_list_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                renameListEntry(listEntry, etListName.getText().toString());
+                renameListEntry(listEntry, etItemName.getText().toString());
             }
         });
 
