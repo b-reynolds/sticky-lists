@@ -14,7 +14,7 @@
         android:layout_marginStart="8dp"
         android:paddingBottom="8dp"
         android:paddingTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:layout_constraintEnd_toStartOf="@+id/cbCompleted"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
