@@ -94,4 +94,18 @@ public class ListEntry implements Serializable {
         return mListItems;
     }
 
+    /**
+     * Returns the number of '{@code ListItem}'s belonging to the {@code ListEntry} that are completed.
+     * @return Number of '{@code ListItem}'s belonging to the {@code ListEntry} that are completed.
+     */
+    public int getListItemsCompleted() {
+        int itemsCompleted = 0;
+        for(ListItem listItem : getListItems()) {
+            if(listItem.isCompleted()) {
+                itemsCompleted++;
+            }
+        }
+        return itemsCompleted;
+    }
+
 }

@@ -13,8 +13,11 @@ import java.util.ArrayList;
 
 public class ListEntryListAdapter extends ArrayAdapter<ListEntry> {
 
+    private final Context mContext;
+
     ListEntryListAdapter(Context context, ArrayList<ListEntry> listEntries) {
         super(context, 0, listEntries);
+        mContext = context;
     }
 
     @NonNull
@@ -27,10 +30,12 @@ public class ListEntryListAdapter extends ArrayAdapter<ListEntry> {
 
         TextView tvName = convertView.findViewById(R.id.tvName);
         TextView tvDateCreated = convertView.findViewById(R.id.tvDateCreated);
+        TextView tvItemsCompleted = convertView.findViewById(R.id.tvItemsCompleted);
 
         if(listEntry != null) {
             tvName.setText(listEntry.getName());
             tvDateCreated.setText(DateFormat.format("dd/MM/yyyy", listEntry.getDateCreated()).toString());
+            tvItemsCompleted.setText(String.format(mContext.getString(R.string.list_entry_adapter_items_completed), listEntry.getListItemsCompleted(), listEntry.getListItems().size()));
         }
 
         return convertView;
