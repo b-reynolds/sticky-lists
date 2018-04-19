@@ -2,6 +2,7 @@ package io.benreynolds.listcrafter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -120,6 +121,11 @@ public class ListViewActivity extends AppCompatActivity {
         // Clear and repopulate the active 'ListEntry's 'ListItem's.
         mListItems.addAll(mListEntry.getListItems());
         mListItemListAdapter.notifyDataSetChanged();
+
+        ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null) {
+            getSupportActionBar().setTitle(mListEntry.getName());
+        }
 
         super.onResume();
     }
