@@ -129,6 +129,9 @@ public class ListViewActivity extends AppCompatActivity {
             case R.id.rename:
                 promptUserToRenameListItem(selectedListItem);
                 return true;
+            case R.id.duplicate:
+                ListUtils.duplicateListObject(selectedListItem, mActiveListEntry.getListItems(), lvListItems, mListItemListAdapter);
+                return true;
             case R.id.delete:
                 ListUtils.deleteListObject(selectedListItem, mActiveListEntry.getListItems(), lvListItems, mListItemListAdapter);
                 return true;

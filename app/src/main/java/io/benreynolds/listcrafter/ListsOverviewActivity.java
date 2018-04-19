@@ -110,6 +110,9 @@ public class ListsOverviewActivity extends AppCompatActivity {
             case R.id.rename:
                 promptUserToRenameListEntry(selectedListEntry);
                 return true;
+            case R.id.duplicate:
+                ListUtils.duplicateListObject(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
+                return true;
             case R.id.delete:
                 ListUtils.deleteListObject(selectedListEntry, mListEntries, lvListEntries, mListEntryListAdapter);
                 return true;
@@ -134,13 +137,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
      * @param listEntry {@code ListEntry} to rename.
      */
     private void renameListEntry(ListEntry listEntry, final String newName) {
-        if(newName.length() < ListEntry.NAME_LENGTH_MIN_CHARACTERS) {
-            Toast.makeText(this, String.format(getString(R.string.toast_rename_too_short), ListEntry.NAME_LENGTH_MIN_CHARACTERS), Toast.LENGTH_SHORT).show();
-        }
-        else if(newName.length() > ListEntry.NAME_LENGTH_MAX_CHARACTERS) {
-            Toast.makeText(this, String.format(getString(R.string.toast_rename_too_long), ListEntry.NAME_LENGTH_MIN_CHARACTERS), Toast.LENGTH_SHORT).show();
-        }
-        else {
+        if(newName.length() >= ListEntry.NAME_LENGTH_MIN_CHARACTERS && newName.length() <= ListEntry.NAME_LENGTH_MAX_CHARACTERS) {
             listEntry.setName(newName);
             mListEntryListAdapter.notifyDataSetChanged();
         }
