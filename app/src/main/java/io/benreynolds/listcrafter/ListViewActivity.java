@@ -114,7 +114,7 @@ public class ListViewActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton(R.string.dialog_add_item_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListEntry.addListItem(new ListItem(etItemDescription.getText().toString()));
+                mListEntry.addListItem(new ListItem(etItemDescription.getText().toString().trim()));
                 mListItems.add(mListEntry.getListItems().get(mListEntry.getListItems().size() - 1));
                 mListItemListAdapter.notifyDataSetChanged();
             }

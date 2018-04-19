@@ -9,7 +9,6 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.view.ContextMenu;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,13 +53,14 @@ public class ListsOverviewActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart() {
+    public void onResume() {
         ArrayList<ListEntry> savedLists = IOUtil.loadListEntries(this);
         if(savedLists != null) {
             mListEntries.clear();
             mListEntries.addAll(savedLists);
+            mListEntryListAdapter.notifyDataSetChanged();
         }
-        super.onStart();
+        super.onResume();
     }
 
     @Override
@@ -230,7 +230,7 @@ public class ListsOverviewActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton(R.string.dialog_add_list_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListEntries.add(new ListEntry(etListName.getText().toString()));
+                mListEntries.add(new ListEntry(etListName.getText().toString().trim()));
                 mListEntryListAdapter.notifyDataSetChanged();
                 IOUtil.saveListEntries(ListsOverviewActivity.this, mListEntries);
             }

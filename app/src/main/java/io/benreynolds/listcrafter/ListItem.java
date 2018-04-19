@@ -17,7 +17,7 @@ public class ListItem implements Serializable {
     private static final String DESCRIPTION_DEFAULT = "Unnamed List Item";
 
     /** Description of the {@code ListItem}, for example: "Make dinner". */
-    private String mDescription;
+    private String mDescription = DESCRIPTION_DEFAULT;
 
     /** Completion state of the {@code ListItem} */
     private boolean mCompleted;
