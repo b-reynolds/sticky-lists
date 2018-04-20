@@ -1,7 +1,6 @@
 package io.benreynolds.listcrafter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
@@ -29,9 +28,9 @@ public class TaskGroupListAdapter extends ArrayAdapter<TaskGroup> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.row_task_group, parent, false);
         }
 
-        TextView tvName = convertView.findViewById(R.id.tvName);
-        TextView tvDateCreated = convertView.findViewById(R.id.tvDateCreated);
-        TextView tvItemsCompleted = convertView.findViewById(R.id.tvItemsCompleted);
+        TextView tvName = convertView.findViewById(R.id.tvTaskGroupName);
+        TextView tvDateCreated = convertView.findViewById(R.id.tvTaskGroupDateCreated);
+        TextView tvItemsCompleted = convertView.findViewById(R.id.tvTaskGroupTasksCompleted);
 
         if(taskGroup != null) {
             tvName.setText(taskGroup.getName());

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">List Crafter</string>
+    <string name="app_name">Sticky Notes</string>
 
     <string name="action_add_task_group">Add Task Group</string>
     <string name="action_add_task">Add Task</string>

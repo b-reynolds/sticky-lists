@@ -2,17 +2,66 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/clRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TaskActivity">
+    tools:context=".TaskActivity"
+    tools:background="#FFF982">
 
     <ListView
         android:id="@+id/lvListItems"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTaskGroupName" />
+
+    <TextView
+        android:id="@+id/tvTaskGroupName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/short_stack"
+        android:paddingBottom="8dp"
+        android:paddingTop="0dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/primary_text_light"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTaskGroupDateCreated"
+        tools:text="Development Tasks" />
+
+    <TextView
+        android:id="@+id/tvTaskGroupDateCreated"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/open_sans_light"
+        android:textColor="@android:color/primary_text_light"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="01/01/1994" />
+
+    <TextView
+        android:id="@+id/tvTaskGroupTasksCompleted"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/open_sans_light"
+        android:textColor="@android:color/primary_text_light"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="(1/10 Complete)" />
 
 </android.support.constraint.ConstraintLayout>

@@ -188,7 +188,23 @@ public class TaskGroupsActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton(R.string.dialog_add_task_group_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListEntries.add(new TaskGroup(etItemName.getText().toString().trim()));
+
+                TaskGroup taskGroup = new TaskGroup(etItemName.getText().toString().trim());
+
+                if(mListEntries.size() == 0) {
+                    taskGroup.setColor(TaskGroup.getAvailableColors().get(0));
+                }
+                else {
+                    ArrayList<Integer> availableColours = TaskGroup.getAvailableColors();
+                    for(int i = 0; i < availableColours.size(); i++) {
+                        if(mListEntries.get(mListEntries.size() - 1).getColor() == availableColours.get(i)) {
+                            taskGroup.setColor(i + 1 < availableColours.size() ? availableColours.get(i + 1) : availableColours.get(0));
+                            break;
+                        }
+                    }
+                }
+
+                mListEntries.add(taskGroup);
                 mTaskGroupListAdapter.notifyDataSetChanged();
                 IOUtils.saveListEntries(TaskGroupsActivity.this, mListEntries);
             }

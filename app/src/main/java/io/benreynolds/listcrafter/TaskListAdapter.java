@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,21 +29,12 @@ public class TaskListAdapter extends ArrayAdapter<Task> {
         }
 
         final TextView tvDescription = convertView.findViewById(R.id.tvDescription);
-        final CheckBox cbCompleted = convertView.findViewById(R.id.cbCompleted);
-        cbCompleted.setFocusable(false);
+        final ImageView ivCheck = convertView.findViewById(R.id.ivCheck);
 
         if(task != null) {
             tvDescription.setText(task.getDescription());
-            cbCompleted.setChecked(task.isCompleted());
+            ivCheck.setVisibility(task.isCompleted() ? ImageView.VISIBLE : ImageView.INVISIBLE);
             setTextStrikethrough(tvDescription, task.isCompleted());
-
-            cbCompleted.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    task.setCompleted(isChecked);
-                    setTextStrikethrough(tvDescription, isChecked);
-                }
-            });
         }
 
         return convertView;

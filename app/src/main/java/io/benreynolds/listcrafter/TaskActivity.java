@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.util.Pair;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,10 @@ public class TaskActivity extends AppCompatActivity {
     private TaskListAdapter mTaskListAdapter;
     private ListView lvListItems;
 
+    private TextView tvTaskGroupName;
+    private TextView tvTaskGroupDateCreated;
+    private TextView tvTaskGroupTasksCompleted;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,19 @@ public class TaskActivity extends AppCompatActivity {
 
         lvListItems = findViewById(R.id.lvListItems);
         registerForContextMenu(lvListItems);
+
+        lvListItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mActiveTaskGroup.getListItems().get(position).setCompleted(!mActiveTaskGroup.getListItems().get(position).isCompleted());
+                mTaskListAdapter.notifyDataSetChanged();
+                tvTaskGroupTasksCompleted.setText(String.format(getString(R.string.task_group_row_items_completed), mActiveTaskGroup.getListItemsCompleted(), mActiveTaskGroup.getListItems().size()));
+            }
+        });
+
+        tvTaskGroupName = findViewById(R.id.tvTaskGroupName);
+        tvTaskGroupDateCreated = findViewById(R.id.tvTaskGroupDateCreated);
+        tvTaskGroupTasksCompleted = findViewById(R.id.tvTaskGroupTasksCompleted);
 
         if(savedInstanceState == null) {
             ArrayList<TaskGroup> savedListEntries = IOUtils.loadListEntries(this);
@@ -67,6 +86,10 @@ public class TaskActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
+        tvTaskGroupName.setText(mActiveTaskGroup.getName());
+        tvTaskGroupDateCreated.setText(DateFormat.format("dd/MM/yyyy", mActiveTaskGroup.getDateCreated()).toString());
+        tvTaskGroupTasksCompleted.setText(String.format(getString(R.string.task_group_row_items_completed), mActiveTaskGroup.getListItemsCompleted(), mActiveTaskGroup.getListItems().size()));
+
         mTaskListAdapter = new TaskListAdapter(this, mActiveTaskGroup.getListItems());
         lvListItems.setAdapter(mTaskListAdapter);
         mTaskListAdapter.notifyDataSetChanged();
@@ -75,6 +98,9 @@ public class TaskActivity extends AppCompatActivity {
         if(actionBar != null) {
             getSupportActionBar().setTitle(mActiveTaskGroup.getName());
         }
+
+        View constraintLayout = findViewById(R.id.clRoot);
+        constraintLayout.setBackgroundColor(mActiveTaskGroup.getColor());
     }
 
     @Override
@@ -210,6 +236,7 @@ public class TaskActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 mActiveTaskGroup.addListItem(new Task(etItemDescription.getText().toString().trim()));
+                tvTaskGroupTasksCompleted.setText(String.format(getString(R.string.task_group_row_items_completed), mActiveTaskGroup.getListItemsCompleted(), mActiveTaskGroup.getListItems().size()));
                 mTaskListAdapter.notifyDataSetChanged();
             }
         });

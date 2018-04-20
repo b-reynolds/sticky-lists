@@ -4,45 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:background="@color/taskYellow">
+    tools:background="#FFF982">
 
     <TextView
-        android:id="@+id/tvName"
+        android:id="@+id/tvTaskGroupName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
-        android:fontFamily="cursive"
+        android:fontFamily="@font/short_stack"
         android:paddingBottom="8dp"
         android:paddingTop="0dp"
         android:textAlignment="textStart"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@android:color/primary_text_light"
         android:textSize="24sp"
+        android:typeface="normal"
         app:layout_constraintEnd_toStartOf="@+id/ivArrow"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDateCreated"
+        app:layout_constraintTop_toBottomOf="@+id/tvTaskGroupDateCreated"
         tools:text="Development Tasks" />
 
     <TextView
-        android:id="@+id/tvDateCreated"
+        android:id="@+id/tvTaskGroupDateCreated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:paddingBottom="0dp"
-        android:paddingTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/open_sans_light"
+        android:textColor="@android:color/primary_text_light"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="01/01/1994" />
 
     <TextView
-        android:id="@+id/tvItemsCompleted"
+        android:id="@+id/tvTaskGroupTasksCompleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:fontFamily="@font/open_sans_light"
+        android:textColor="@android:color/primary_text_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="(1/10 Complete)" />
@@ -53,9 +55,9 @@
         android:layout_height="0dp"
         android:layout_marginEnd="8dp"
         android:paddingBottom="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tvName"
+        app:layout_constraintBottom_toBottomOf="@+id/tvTaskGroupName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvItemsCompleted"
+        app:layout_constraintTop_toBottomOf="@+id/tvTaskGroupTasksCompleted"
         app:srcCompat="@drawable/ic_arrow_right_24dp" />
 
 </android.support.constraint.ConstraintLayout>

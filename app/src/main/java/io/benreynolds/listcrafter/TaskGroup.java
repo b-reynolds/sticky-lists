@@ -109,6 +109,19 @@ public class TaskGroup implements Serializable {
     }
 
     /**
+     * Returns an {@code ArrayList} containing all of the colours available to the {@code TaskGroup}.
+     * @return {@code ArrayList} containing all of the colours available to the {@code TaskGroup}.
+     */
+    public static ArrayList<Integer> getAvailableColors() {
+        ArrayList<Integer> availableColours = new ArrayList<>();
+        availableColours.add(COLOR_YELLOW);
+        availableColours.add(COLOR_ORANGE);
+        availableColours.add(COLOR_GREEN);
+        availableColours.add(COLOR_BLUE);
+        return availableColours;
+    }
+
+    /**
      * Adds a {@code Task} to the {@code TaskGroup}.
      * @param task {@code Task} to add.
      */
