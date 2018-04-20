@@ -115,6 +115,8 @@ public class TaskActivity extends AppCompatActivity {
             case R.id.action_add_item:
                 promptUserToAddNewListItem();
                 return true;
+            case R.id.action_delete_all:
+                promptUserToDeleteAll();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -176,6 +178,36 @@ public class TaskActivity extends AppCompatActivity {
             task.setDescription(newDescription);
             mTaskListAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * Prompts the user with a {@code DialogBox} to confirm that they would like to delete all '{@code TaskGroup}'s.
+     */
+    private void promptUserToDeleteAll() {
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // Set the title text of the DialogBox.
+        alertDialogBuilder.setTitle(R.string.dialog_delete_tasks);
+
+        // Add a positive button to the DialogBox that adds a new list that is named as requested.
+        alertDialogBuilder.setPositiveButton(R.string.dialog_delete_tasks_positive_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListViewUtils.deleteListObjects(mActiveTaskGroup.getListItems(), lvListItems, mTaskListAdapter);
+                tvTaskGroupTasksCompleted.setText(String.format(getString(R.string.task_group_row_items_completed), mActiveTaskGroup.getListItemsCompleted(), mActiveTaskGroup.getListItems().size()));
+            }
+        });
+
+        // Add a negative button to the DialogBox that closes the DialogBox and does not add any new lists.
+        alertDialogBuilder.setNegativeButton(R.string.dialog_delete_tasks_negative_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Create and show the DialogBox.
+        alertDialogBuilder.create().show();
     }
 
     /**

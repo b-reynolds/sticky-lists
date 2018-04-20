@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * {@code TaskGroupsActivity} is the root activity of the application, it allows users to create and manage '{@code TaskGroup}'s.
@@ -153,6 +154,9 @@ public class TaskGroupsActivity extends AppCompatActivity {
             case R.id.action_add_list:
                 promptUserToAddNewListEntry();
                 return true;
+            case R.id.action_delete_all:
+                promptUserToDeleteAll();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -167,6 +171,35 @@ public class TaskGroupsActivity extends AppCompatActivity {
             taskGroup.setName(newName);
             mTaskGroupListAdapter.notifyDataSetChanged();
         }
+    }
+
+    /**
+     * Prompts the user with a {@code DialogBox} to confirm that they would like to delete all '{@code TaskGroup}'s.
+     */
+    private void promptUserToDeleteAll() {
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // Set the title text of the DialogBox.
+        alertDialogBuilder.setTitle(R.string.dialog_delete_task_groups);
+
+        // Add a positive button to the DialogBox that adds a new list that is named as requested.
+        alertDialogBuilder.setPositiveButton(R.string.dialog_delete_task_groups_positive_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ListViewUtils.deleteListObjects(mListEntries, lvListEntries, mTaskGroupListAdapter);
+            }
+        });
+
+        // Add a negative button to the DialogBox that closes the DialogBox and does not add any new lists.
+        alertDialogBuilder.setNegativeButton(R.string.dialog_delete_task_groups_negative_button, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        // Create and show the DialogBox.
+        alertDialogBuilder.create().show();
     }
 
     /**
@@ -206,7 +239,6 @@ public class TaskGroupsActivity extends AppCompatActivity {
 
                 mListEntries.add(taskGroup);
                 mTaskGroupListAdapter.notifyDataSetChanged();
-                IOUtils.saveListEntries(TaskGroupsActivity.this, mListEntries);
             }
         });
 

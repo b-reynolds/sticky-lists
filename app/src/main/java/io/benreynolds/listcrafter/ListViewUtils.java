@@ -72,6 +72,15 @@ public class ListViewUtils {
     }
 
     /**
+     * Deletes all of the {@code Object} within the {@code ArrayList} and updates the respective collections.
+     */
+    public static <T> void deleteListObjects(final ArrayList<T> arrayList, final ListView listView, final ArrayAdapter<T> arrayAdapter) {
+        arrayList.clear();
+        listView.setAdapter(arrayAdapter);
+        arrayAdapter.notifyDataSetChanged();
+    }
+
+    /**
      * Duplicates the specified {@code Object} and updates all of the respective collections.
      * @param object {@code Object} to duplicate.
      */

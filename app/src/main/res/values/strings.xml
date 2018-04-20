@@ -1,18 +1,28 @@
 <resources>
     <string name="app_name">Sticky Notes</string>
 
-    <string name="action_add_task_group">Add Task Group</string>
+    <string name="action_add_task_group">Add Sticky</string>
     <string name="action_add_task">Add Task</string>
 
-    <string name="dialog_task_group_name">Task Group Name</string>
-    <string name="dialog_task_group_rename">Rename Task Group</string>
+    <string name="dialog_task_group_name">Sticky Name</string>
     <string name="dialog_add_task_group_positive_button">Add</string>
     <string name="dialog_add_task_group_negative_button">@android:string/cancel</string>
+
+
+    <string name="dialog_task_group_rename">Rename Sticky</string>
     <string name="dialog_rename_task_group_positive_button">Rename</string>
     <string name="dialog_rename_task_group_negative_button">@android:string/cancel</string>
 
-    <string name="dialog_title_task_description">Task Description</string>
-    <string name="dialog_title_task_rename">Rename Task</string>
+    <string name="dialog_delete_task_groups">Delete All Stickies?</string>
+    <string name="dialog_delete_task_groups_positive_button">Yes</string>
+    <string name="dialog_delete_task_groups_negative_button">@android:string/cancel</string>
+
+    <string name="dialog_delete_tasks">Delete All Items?</string>
+    <string name="dialog_delete_tasks_positive_button">Yes</string>
+    <string name="dialog_delete_tasks_negative_button">@android:string/cancel</string>
+
+    <string name="dialog_title_task_description">Item Description</string>
+    <string name="dialog_title_task_rename">Rename Item</string>
     <string name="dialog_add_task_positive_button">Add</string>
     <string name="dialog_add_task_negative_button">@android:string/cancel</string>
     <string name="dialog_rename_task_positive_button">Rename</string>
@@ -32,5 +42,6 @@
     <string name="menu_long_press_set_colour_orange">Orange</string>
     <string name="menu_long_press_set_colour_green">Green</string>
     <string name="menu_long_press_set_colour_blue">Blue</string>
+    <string name="action_delete_all">Delete All</string>
 
 </resources>
