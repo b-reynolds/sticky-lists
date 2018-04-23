@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * {@code Task} represents a single task/item.
  */
-public class Task implements Serializable {
+public class Task implements Serializable  {
 
     /** Minimum amount of characters required for a '{@code Task}'s description. */
     public static final int DESCRIPTION_LENGTH_MIN_CHARACTERS = 1;
@@ -29,6 +29,11 @@ public class Task implements Serializable {
 
     }
 
+    Task(final Task copy) {
+        setDescription(copy.getDescription());
+        setCompleted(copy.isCompleted());
+    }
+
     /**
      * Initializes the {@code Task} with the specified description.
      * @param description {@code Task}'s name.
@@ -36,6 +41,8 @@ public class Task implements Serializable {
     Task(final String description) {
         setDescription(description);
     }
+
+
 
     /**
      * Set's the description of the {@code Task}}.

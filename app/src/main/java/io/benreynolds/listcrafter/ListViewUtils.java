@@ -80,14 +80,4 @@ public class ListViewUtils {
         arrayAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * Duplicates the specified {@code Object} and updates all of the respective collections.
-     * @param object {@code Object} to duplicate.
-     */
-    public static <T> void duplicateListObject(final T object, final ArrayList<T> arrayList, final ListView listView, final ArrayAdapter<T> arrayAdapter) {
-        arrayList.add(object);
-        listView.setAdapter(arrayAdapter);
-        arrayAdapter.notifyDataSetChanged();
-    }
-
 }

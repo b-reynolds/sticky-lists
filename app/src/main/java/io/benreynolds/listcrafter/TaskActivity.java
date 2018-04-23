@@ -115,9 +115,10 @@ public class TaskActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
+        super.onPause();
+
         // Save the current state of the user's 'TaskGroup's to the device's internal storage.
         IOUtils.saveTaskGroups(this, mTaskGroups);
-        super.onPause();
     }
 
     @Override

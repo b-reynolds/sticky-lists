@@ -35,7 +35,7 @@ public class TaskGroupListAdapter extends ArrayAdapter<TaskGroup> {
         if(taskGroup != null) {
             tvName.setText(taskGroup.getName());
             tvDateCreated.setText(DateFormat.format("dd/MM/yyyy", taskGroup.getDateCreated()).toString());
-            tvItemsCompleted.setText(String.format(mContext.getString(R.string.task_group_row_items_completed), taskGroup.getListItemsCompleted(), taskGroup.getListItems().size()));
+            tvItemsCompleted.setText(String.format(mContext.getString(R.string.task_group_row_items_completed), taskGroup.getCompletedTasks(), taskGroup.getTasks().size()));
             convertView.setBackgroundColor(taskGroup.getColor());
         }
 

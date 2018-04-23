@@ -13,7 +13,7 @@ public class IOUtils {
 
     private static final String FILE_LIST_ENTRIES = "list_entries.ser";
 
-    public static boolean saveListEntries(final Context context, final ArrayList<TaskGroup> listEntries) {
+    public static boolean saveTaskGroups(final Context context, final ArrayList<TaskGroup> listEntries) {
         try {
             FileOutputStream fileOutputStream = context.openFileOutput(FILE_LIST_ENTRIES, Context.MODE_PRIVATE);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
@@ -31,7 +31,7 @@ public class IOUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static ArrayList<TaskGroup> loadListEntries(final Context context) {
+    public static ArrayList<TaskGroup> loadTaskGroups(final Context context) {
         try {
             FileInputStream fileInputStream = context.openFileInput(FILE_LIST_ENTRIES);
             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);

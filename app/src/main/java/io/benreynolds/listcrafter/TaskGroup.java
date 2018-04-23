@@ -1,7 +1,6 @@
 package io.benreynolds.listcrafter;
 
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,6 +47,15 @@ public class TaskGroup implements Serializable {
      */
     TaskGroup() {
 
+    }
+
+    TaskGroup(TaskGroup copy) {
+        setName(copy.getName());
+        setDateCreated((Date)copy.getDateCreated().clone());
+        setColor(copy.getColor());
+        for(Task task : copy.getTasks()) {
+            addTask(new Task(task));
+        }
     }
 
     /**
@@ -125,7 +133,7 @@ public class TaskGroup implements Serializable {
      * Adds a {@code Task} to the {@code TaskGroup}.
      * @param task {@code Task} to add.
      */
-    public void addListItem(final Task task) {
+    public void addTask(final Task task) {
         mTasks.add(task);
     }
 
@@ -133,7 +141,7 @@ public class TaskGroup implements Serializable {
      * Returns the '{@code Task}s that belong to the {@code TaskGroup}.
      * @return '{@code Task}s that belong to the {@code TaskGroup}.
      */
-    public ArrayList<Task> getListItems() {
+    public ArrayList<Task> getTasks() {
         return mTasks;
     }
 
@@ -141,9 +149,9 @@ public class TaskGroup implements Serializable {
      * Returns the number of '{@code Task}'s belonging to the {@code TaskGroup} that are completed.
      * @return Number of '{@code Task}'s belonging to the {@code TaskGroup} that are completed.
      */
-    public int getListItemsCompleted() {
+    public int getCompletedTasks() {
         int itemsCompleted = 0;
-        for(Task task : getListItems()) {
+        for(Task task : getTasks()) {
             if(task.isCompleted()) {
                 itemsCompleted++;
             }

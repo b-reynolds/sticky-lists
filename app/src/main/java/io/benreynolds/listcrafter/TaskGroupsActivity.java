@@ -15,62 +15,64 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * {@code TaskGroupsActivity} is the root activity of the application, it allows users to create and manage '{@code TaskGroup}'s.
  */
 public class TaskGroupsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SELECTED_LIST_INDEX = "SELECTED_LIST_INDEX";
+    /** Key for the index of the selected {@code TaskGroup} that is passed to {@code TaskActivity}. */
+    public static final String EXTRA_SELECTED_TASK_INDEX = "SELECTED_TASK_INDEX";
 
-    final ArrayList<TaskGroup> mListEntries = new ArrayList<>();
+    ArrayList<TaskGroup> mTaskGroups = new ArrayList<>();
     private TaskGroupListAdapter mTaskGroupListAdapter;
-    private ListView lvListEntries;
+    private ListView lvTaskGroups;
 
     private int mContextMenuInfoPosition;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_groups);
 
-        mTaskGroupListAdapter = new TaskGroupListAdapter(this, mListEntries);
-        lvListEntries = findViewById(R.id.lvListEntries);
-        registerForContextMenu(lvListEntries);
+        lvTaskGroups = findViewById(R.id.lvTaskGroups);
+        registerForContextMenu(lvTaskGroups);
 
-        lvListEntries.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvTaskGroups.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent startListViewActivity = new Intent(view.getContext(), TaskActivity.class);
-                startListViewActivity.putExtra(EXTRA_SELECTED_LIST_INDEX, position);
+                startListViewActivity.putExtra(EXTRA_SELECTED_TASK_INDEX, position);
                 startActivity(startListViewActivity);
             }
         });
     }
 
-
     @Override
     public void onResume() {
+        super.onResume();
 
-        mListEntries.clear();
+        // Load saved 'TaskGroup's from the device's internal storage.
+        ArrayList<TaskGroup> savedTaskGroups = IOUtils.loadTaskGroups(this);
 
-        ArrayList<TaskGroup> savedLists = IOUtils.loadListEntries(this);
-        if(savedLists != null) {
-            mListEntries.addAll(savedLists);
+        // Re-populate the 'TaskGroup's list.
+        mTaskGroups.clear();
+        if(savedTaskGroups != null) {
+            mTaskGroups.addAll(savedTaskGroups);
         }
 
-        lvListEntries.setAdapter(mTaskGroupListAdapter);
+        // Set up the ListView/ListAdapter used to display the 'TaskGroup's created by the user.
+        mTaskGroupListAdapter = new TaskGroupListAdapter(this, mTaskGroups);
+        lvTaskGroups.setAdapter(mTaskGroupListAdapter);
         mTaskGroupListAdapter.notifyDataSetChanged();
-
-
-        super.onResume();
     }
 
     @Override
     protected void onPause() {
-        IOUtils.saveListEntries(this, mListEntries);
         super.onPause();
+
+        // Save the current state of the user's 'TaskGroup's to the device's internal storage.
+        IOUtils.saveTaskGroups(this, mTaskGroups);
     }
 
     @Override
@@ -82,50 +84,49 @@ public class TaskGroupsActivity extends AppCompatActivity {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, view, menuInfo);
-        if (view.getId()==R.id.lvListEntries) {
+        if (view.getId()==R.id.lvTaskGroups) {
             getMenuInflater().inflate(R.menu.menu_task_group_long_press, menu);
         }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
-        AdapterView.AdapterContextMenuInfo info;
-
+        AdapterView.AdapterContextMenuInfo adapterContextMenuInfo;
         try {
-            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            adapterContextMenuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         }
         catch(ClassCastException exception) {
             return false;
         }
 
-        if(info != null) {
-            mContextMenuInfoPosition = info.position;
+        if(adapterContextMenuInfo != null) {
+            mContextMenuInfoPosition = adapterContextMenuInfo.position;
         }
 
-        TaskGroup selectedTaskGroup = (TaskGroup)lvListEntries.getItemAtPosition(mContextMenuInfoPosition);
+        TaskGroup selectedTaskGroup = (TaskGroup)lvTaskGroups.getItemAtPosition(mContextMenuInfoPosition);
 
         switch(item.getItemId()) {
             case R.id.move_up:
-                ListViewUtils.moveListObjectUp(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.moveListObjectUp(selectedTaskGroup, mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
                 return true;
             case R.id.move_down:
-                ListViewUtils.moveListObjectDown(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.moveListObjectDown(selectedTaskGroup, mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
                 return true;
             case R.id.send_top:
-                ListViewUtils.sendListObjectToTop(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.sendListObjectToTop(selectedTaskGroup, mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
                 return true;
             case R.id.send_bottom:
-                ListViewUtils.sendListObjectToBottom(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.sendListObjectToBottom(selectedTaskGroup, mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
                 return true;
             case R.id.rename:
                 promptUserToRenameListEntry(selectedTaskGroup);
                 return true;
             case R.id.duplicate:
-                ListViewUtils.duplicateListObject(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                mTaskGroups.add(new TaskGroup(selectedTaskGroup));
+                mTaskGroupListAdapter.notifyDataSetChanged();
                 return true;
             case R.id.delete:
-                ListViewUtils.deleteListObject(selectedTaskGroup, mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.deleteListObject(selectedTaskGroup, mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
                 return true;
             case R.id.colour_yellow:
                 selectedTaskGroup.setColor(TaskGroup.COLOR_YELLOW);
@@ -186,7 +187,7 @@ public class TaskGroupsActivity extends AppCompatActivity {
         alertDialogBuilder.setPositiveButton(R.string.dialog_delete_task_groups_positive_button, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ListViewUtils.deleteListObjects(mListEntries, lvListEntries, mTaskGroupListAdapter);
+                ListViewUtils.deleteListObjects(mTaskGroups, lvTaskGroups, mTaskGroupListAdapter);
             }
         });
 
@@ -222,22 +223,24 @@ public class TaskGroupsActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
+                // Create a new TaskGroup with the specified name.
                 TaskGroup taskGroup = new TaskGroup(etItemName.getText().toString().trim());
 
-                if(mListEntries.size() == 0) {
+                // Set the 'TaskGroup's colour (cycles through all available colours).
+                if(mTaskGroups.size() == 0) {
                     taskGroup.setColor(TaskGroup.getAvailableColors().get(0));
                 }
                 else {
                     ArrayList<Integer> availableColours = TaskGroup.getAvailableColors();
                     for(int i = 0; i < availableColours.size(); i++) {
-                        if(mListEntries.get(mListEntries.size() - 1).getColor() == availableColours.get(i)) {
+                        if(mTaskGroups.get(mTaskGroups.size() - 1).getColor() == availableColours.get(i)) {
                             taskGroup.setColor(i + 1 < availableColours.size() ? availableColours.get(i + 1) : availableColours.get(0));
                             break;
                         }
                     }
                 }
 
-                mListEntries.add(taskGroup);
+                mTaskGroups.add(taskGroup);
                 mTaskGroupListAdapter.notifyDataSetChanged();
             }
         });
