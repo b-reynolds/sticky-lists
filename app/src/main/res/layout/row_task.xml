@@ -15,7 +15,7 @@
         android:layout_marginStart="8dp"
         android:fontFamily="@font/open_sans_light"
         android:paddingBottom="8dp"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@android:color/primary_text_light"
         android:textSize="18sp"

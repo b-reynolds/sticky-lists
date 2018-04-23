@@ -1,4 +1,4 @@
-package io.benreynolds.listcrafter;
+package io.benreynolds.stickylists;
 
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -20,7 +20,6 @@ public class ListViewUtils {
             arrayAdapter.notifyDataSetChanged();
         }
     }
-
 
     /**
      * Moves the specified {@code Object} down one position in the list and updates all of the respective collections.

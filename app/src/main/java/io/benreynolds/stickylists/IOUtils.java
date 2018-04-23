@@ -1,4 +1,4 @@
-package io.benreynolds.listcrafter;
+package io.benreynolds.stickylists;
 
 import android.content.Context;
 

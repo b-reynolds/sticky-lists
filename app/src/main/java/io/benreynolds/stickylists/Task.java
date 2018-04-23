@@ -1,4 +1,4 @@
-package io.benreynolds.listcrafter;
+package io.benreynolds.stickylists;
 
 import java.io.Serializable;
 
@@ -41,8 +41,6 @@ public class Task implements Serializable  {
     Task(final String description) {
         setDescription(description);
     }
-
-
 
     /**
      * Set's the description of the {@code Task}}.

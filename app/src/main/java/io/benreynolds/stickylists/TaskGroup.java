@@ -1,4 +1,4 @@
-package io.benreynolds.listcrafter;
+package io.benreynolds.stickylists;
 
 import android.graphics.Color;
 
@@ -88,7 +88,7 @@ public class TaskGroup implements Serializable {
      * Set's the date/time that the {@code TaskGroup} was created.
      * @param dateCreated Date/time that the {@code TaskGroup} was created.
      */
-    public void setDateCreated(final Date dateCreated) {
+    private void setDateCreated(final Date dateCreated) {
         mDateCreated = dateCreated;
     }
 
